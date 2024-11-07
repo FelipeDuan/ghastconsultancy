@@ -1,0 +1,19 @@
+spring:
+
+application:
+  name: Ghast Consultory
+
+datasource:
+  url: jdbc:postgresql://localhost:5432/postgres # Nome do banco de dados ajustado
+  username: postgres
+  password: developer
+  driver-class-name: org.postgresql.Driver
+
+jpa:
+  hibernate:
+    ddl-auto: update # Criação automática de tabelas
+  show-sql: true
+  properties:
+    hibernate:
+      format_sql: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
