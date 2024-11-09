@@ -1,10 +1,9 @@
 spring:
-
   application:
     name: Ghast Consultory
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres # Nome do banco de dados ajustado
+    url: jdbc:postgresql://localhost:5432/teste # Nome do banco de dados ajustado
     username: postgres
     password: developer
     driver-class-name: org.postgresql.Driver

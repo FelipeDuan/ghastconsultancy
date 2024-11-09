@@ -1,9 +1,11 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
 
+import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.http.ResponseEntity;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,6 +36,9 @@ public class Consultor {
 
     @Column(name = "telefone",length = 15, nullable = false)
     private String telefone;
+
+    private Integer tipo_atendimento;
+
 
 
 
