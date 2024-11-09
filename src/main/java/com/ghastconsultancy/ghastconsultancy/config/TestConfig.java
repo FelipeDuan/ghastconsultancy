@@ -1,6 +1,7 @@
 package com.ghastconsultancy.ghastconsultancy.config;
 
 
+import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
 import com.ghastconsultancy.ghastconsultancy.model.Consultor;
 import com.ghastconsultancy.ghastconsultancy.repository.ConsultorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,9 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Consultor consultor = new Consultor(null, "Pablo Patricio","123.456.789-00","exemple.exemple@com.com","(11) 99999-9999");
-        consultorRepository.save(consultor);
+       Consultor consultor = new Consultor( "Pablo Patricio","056.255.713-09","pablo.martins@somosicev" +
+               ".com","(86) 99973-1747", TipoDeAtendimento.GRANDE);
+      consultorRepository.save(consultor);
 
     }
 }

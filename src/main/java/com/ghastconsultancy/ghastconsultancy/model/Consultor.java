@@ -1,24 +1,20 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
-
 import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.http.ResponseEntity;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
+
+
 @Getter
 @Setter
-
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 @Entity
+@NoArgsConstructor
 @Table(name = "consultores")
 public class Consultor {
 
-    @EqualsAndHashCode.Include // gera um equal e hashcode apenas para o id
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,7 +23,7 @@ public class Consultor {
     @Column(name = "nome",length = 50, nullable = false)
     private String nome;
 
-    @EqualsAndHashCode.Include // gera um equal e hashcode apenas para o cpf
+
     @Column(name = "cpf",length = 15, nullable = false, unique = true)
     private String cpf;
 
@@ -37,12 +33,27 @@ public class Consultor {
     @Column(name = "telefone",length = 15, nullable = false)
     private String telefone;
 
-    private Integer tipo_atendimento;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @Column(name = "tipo_de_atendimento")
+    private Integer tipoAtendimento;
 
+    public Consultor(String nome, String cpf, String email, String telefone, TipoDeAtendimento tipoAtendimento) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.telefone = telefone;
+        setTipoAtendimento(tipoAtendimento);
+    }
 
+    public TipoDeAtendimento getTipoAtendimento() {
+        return TipoDeAtendimento.valueOf(tipoAtendimento);
+    }
 
-
-
-
+    public void setTipoAtendimento(TipoDeAtendimento tipoAtendimento) {
+        if(tipoAtendimento != null){
+            this.tipoAtendimento = tipoAtendimento.getCode();
+        }
+    }
 }
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/consultor")
@@ -21,18 +22,10 @@ public class ConsultorController {
     @PostMapping("/cadastrar") // @ResquestBody  -> Anotação para converter o Json em um objeto to tipo Consultor
     public ResponseEntity<String> cadastrarConsultor(@RequestBody Consultor consultor) {
 
-        try {
-            if(consultorRepository.findByCpf(consultor.getCpf()).isPresent()) {
+        if(consultorRepository.findByCpf(consultor.getCpf()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Consultor já cadastrado");
                 // HttpStatus.CONFLICT ->, 409, ou seja, o recurso já existe
-            }
-
-
-
-        }catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body("Consultor cadastrado com sucesso");
         // HttpStatus.CREATED -> 201, ou seja, o recurso foi criado
     }
@@ -43,6 +36,17 @@ public class ConsultorController {
         // ok = 200, ou seja, a requisição foi bem sucedida
     }
 
+    @GetMapping("/consultar/{id}")
+    public ResponseEntity<Consultor> consultarPorId(@PathVariable Long id) {
+        Optional<Consultor> consultor = consultorRepository.findById(id);
+        if (consultor.isPresent()) {
+            return ResponseEntity.ok(consultor.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // Erro 404 o usuário nao foi encontrado
+
+
+    }
 
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarConsultor(@PathVariable Long id) {
