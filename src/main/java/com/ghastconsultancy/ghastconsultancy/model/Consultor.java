@@ -1,5 +1,6 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
+import com.ghastconsultancy.ghastconsultancy.enums.TipoDeServico;
 import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,17 +34,24 @@ public class Consultor {
     @Column(name = "telefone",length = 15, nullable = false)
     private String telefone;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    @Column(name = "tipo_de_atendimento")
+    @Getter(AccessLevel.NONE) // proibe que o @Getter crie um get para esse atributo
+    @Setter(AccessLevel.NONE) // proibe que o @Setter crie um set para esse atributo
+    @Column(name = "tipo_de_atendimento",length = 10, nullable = false)
     private Integer tipoAtendimento;
 
-    public Consultor(String nome, String cpf, String email, String telefone, TipoDeAtendimento tipoAtendimento) {
+    @Getter(AccessLevel.NONE) // proibe que o @Getter crie um get para esse atributo
+    @Setter(AccessLevel.NONE) // proibe que o @Setter crie um set para esse atributo
+    @Column(name = "tipo_de_serviço",length = 10, nullable = false)
+    private Integer tipoServico;
+
+    public Consultor(String nome, String cpf, String email, String telefone, TipoDeAtendimento tipoAtendimento,
+                     TipoDeServico tipoServico) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
         setTipoAtendimento(tipoAtendimento);
+        setTipoServico(tipoServico);
     }
 
     public TipoDeAtendimento getTipoAtendimento() {
@@ -53,6 +61,16 @@ public class Consultor {
     public void setTipoAtendimento(TipoDeAtendimento tipoAtendimento) {
         if(tipoAtendimento != null){
             this.tipoAtendimento = tipoAtendimento.getCode();
+        }
+    }
+
+    public TipoDeServico getTipoServico() {
+        return TipoDeServico.valueOf(tipoServico);
+    }
+
+    public void setTipoServico(TipoDeServico tipoServico) {
+        if(tipoServico != null){
+            this.tipoServico = tipoServico.getCode();
         }
     }
 }
