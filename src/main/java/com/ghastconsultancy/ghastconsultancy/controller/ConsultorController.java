@@ -39,23 +39,51 @@ public class ConsultorController {
     @GetMapping("/consultar/{id}")
     public ResponseEntity<Consultor> consultarPorId(@PathVariable Long id) {
         Optional<Consultor> consultor = consultorRepository.findById(id);
-        if (consultor.isPresent()) {
-            return ResponseEntity.ok(consultor.get());
+        if (consultor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            // Erro 404 o usuário nao foi encontrado
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        // Erro 404 o usuário nao foi encontrado
+        else{
+            return ResponseEntity.ok(consultor.get());
+            // ok -> 200 deu tudo certo
+        }
 
 
     }
 
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<String> atualizarConsultor(@PathVariable Long id, @RequestBody Consultor consultorParam) {
+
+        Optional<Consultor> consultor = consultorRepository.findById(id);
+        //Optional é uma classe genérica que permite manipular objetos vazios
+
+        if (consultor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+        else{
+            consultor.get().setNome(consultorParam.getNome());
+            consultor.get().setEmail(consultorParam.getEmail());
+            consultor.get().setTelefone(consultorParam.getTelefone());
+            consultorRepository.save(consultor.get());
+            return ResponseEntity.ok("Consultor atualizado com sucesso");
+        }
+    }
+
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<String> deletarConsultor(@PathVariable Long id) {
-        if(consultorRepository.findById(id).isPresent()) {
+        Optional<Consultor> consultor = consultorRepository.findById(id);
+
+
+        if(consultor.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consultor não encontrado");
+            // HttpStatus.NOT_FOUND -> 404, ou seja, o recurso não foi encontrado
+        }
+        else{
             consultorRepository.deleteById(id);
             return ResponseEntity.ok("Consultor deletado com sucesso"); // OK -> Recurso encontrado e deletado
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Consultor não encontrado");
-        // HttpStatus.NOT_FOUND -> 404, ou seja, o recurso não foi encontrado
+
     }
 
     
