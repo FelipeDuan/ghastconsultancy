@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("teste")
 public class TestConfig implements CommandLineRunner {
-
     @Override
     public void run(String... args) throws Exception {
     }

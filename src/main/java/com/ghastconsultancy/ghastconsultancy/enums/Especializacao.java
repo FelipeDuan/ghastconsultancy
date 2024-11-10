@@ -6,17 +6,17 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TipoDeServico {
+public enum Especializacao {
 
-    PEQUENO(1),
-    MEDIO(2),
-    GRANDE(3);
+    FINANCEIRO(1),
+    GESTAO(2),
+    TECNOLOGIA(3);
 
     private Integer code;
 
-    public static TipoDeServico valueOf(Integer code) {
+    public static Especializacao valueOf(Integer code) {
         // vai buscar no código de todos os tipos enumerados de  EspecializacaoConsultor
-        for (TipoDeServico value : TipoDeServico.values()) {
+        for (Especializacao value : Especializacao.values()) {
             if (value.getCode().equals(code)) {
                 return value;
             }

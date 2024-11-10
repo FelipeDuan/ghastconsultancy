@@ -1,6 +1,5 @@
 package com.ghastconsultancy.ghastconsultancy.controller;
 
-
 import com.ghastconsultancy.ghastconsultancy.model.Consultor;
 import com.ghastconsultancy.ghastconsultancy.repository.ConsultorRepository;
 import lombok.AllArgsConstructor;
@@ -36,6 +35,11 @@ public class ConsultorController {
         // ok = 200, ou seja, a requisição foi bem sucedida
     }
 
+    @GetMapping("/consultar/especializacao/{especializacao}")
+    public ResponseEntity<List<Consultor>> consultarPorEspecializacao(@PathVariable Integer especializacao) {
+        return ResponseEntity.ok(consultorRepository.findByEspecializacao(especializacao));
+    }
+
     @GetMapping("/consultar/{id}")
     public ResponseEntity<Consultor> consultarPorId(@PathVariable Long id) {
         Optional<Consultor> consultor = consultorRepository.findById(id);
@@ -64,6 +68,8 @@ public class ConsultorController {
             consultor.get().setNome(consultorParam.getNome());
             consultor.get().setEmail(consultorParam.getEmail());
             consultor.get().setTelefone(consultorParam.getTelefone());
+            consultor.get().setEspecializacao(consultorParam.getEspecializacao());
+            consultor.get().setTipoAtendimento(consultorParam.getTipoAtendimento());
             consultorRepository.save(consultor.get());
             return ResponseEntity.ok("Consultor atualizado com sucesso");
         }

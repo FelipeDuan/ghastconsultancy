@@ -1,6 +1,6 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
-import com.ghastconsultancy.ghastconsultancy.enums.TipoDeServico;
+import com.ghastconsultancy.ghastconsultancy.enums.Especializacao;
 import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,17 +41,17 @@ public class Consultor {
 
     @Getter(AccessLevel.NONE) // proibe que o @Getter crie um get para esse atributo
     @Setter(AccessLevel.NONE) // proibe que o @Setter crie um set para esse atributo
-    @Column(name = "tipo_de_serviço",length = 10, nullable = false)
-    private Integer tipoServico;
+    @Column(name = "especializacao",length = 10, nullable = false)
+    private Integer especializacao;
 
     public Consultor(String nome, String cpf, String email, String telefone, TipoDeAtendimento tipoAtendimento,
-                     TipoDeServico tipoServico) {
+                     Especializacao especializacao) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
         setTipoAtendimento(tipoAtendimento);
-        setTipoServico(tipoServico);
+        setEspecializacao(especializacao);
     }
 
     public TipoDeAtendimento getTipoAtendimento() {
@@ -64,13 +64,13 @@ public class Consultor {
         }
     }
 
-    public TipoDeServico getTipoServico() {
-        return TipoDeServico.valueOf(tipoServico);
+    public Especializacao getEspecializacao() {
+        return Especializacao.valueOf(especializacao);
     }
 
-    public void setTipoServico(TipoDeServico tipoServico) {
-        if(tipoServico != null){
-            this.tipoServico = tipoServico.getCode();
+    public void setEspecializacao(Especializacao especializacao) {
+        if(especializacao != null){
+            this.especializacao = especializacao.getCode();
         }
     }
 }
