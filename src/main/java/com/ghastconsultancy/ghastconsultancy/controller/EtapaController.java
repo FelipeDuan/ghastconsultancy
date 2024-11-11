@@ -31,6 +31,12 @@ public class EtapaController {
         return ResponseEntity.ok(etapa.get());
     }
 
+    @GetMapping("/consultar/status/{status}")
+    public ResponseEntity<List<Etapa>> consultarStatus(@PathVariable Integer status){
+        List<Etapa> etapas = etapaRepository.findAll();
+        return ResponseEntity.ok(etapas);
+    }
+
 
     @PutMapping("/editar/{id}")
     public ResponseEntity<String> editarEtapa(@PathVariable Long id, @RequestBody Etapa etapaParam){
