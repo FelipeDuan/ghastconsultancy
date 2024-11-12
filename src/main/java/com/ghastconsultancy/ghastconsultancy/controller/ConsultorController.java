@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/consultor")
+@RequestMapping("/consultores")
 
 @AllArgsConstructor
 public class ConsultorController {
 
     private ConsultorRepository consultorRepository;
 
-    @PostMapping("/cadastrar") // @ResquestBody  -> Anotação para converter o Json em um objeto to tipo Consultor
+    @PostMapping("/cadastrar") // @ResquestBody -> Anotação para converter o Json em um objeto to tipo Consultor
     public ResponseEntity<String> cadastrarConsultor(@RequestBody Consultor consultor) {
 
         if(consultorRepository.findByCpf(consultor.getCpf()).isPresent()) {
@@ -43,14 +43,9 @@ public class ConsultorController {
     @GetMapping("/consultar/{id}")
     public ResponseEntity<Consultor> consultarPorId(@PathVariable Long id) {
         Optional<Consultor> consultor = consultorRepository.findById(id);
-        if (consultor.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            // Erro 404 o usuário nao foi encontrado
-        }
-        else{
-            return ResponseEntity.ok(consultor.get());
-            // ok -> 200 deu tudo certo
-        }
+        // Erro 404 o usuário nao foi encontrado
+        // ok -> 200 deu tudo certo
+        return consultor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 
     }
