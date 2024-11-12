@@ -25,6 +25,7 @@ public class ConsultorController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Consultor já cadastrado");
                 // HttpStatus.CONFLICT ->, 409, ou seja, o recurso já existe
         }
+        consultorRepository.save(consultor);
         return ResponseEntity.status(HttpStatus.CREATED).body("Consultor cadastrado com sucesso");
         // HttpStatus.CREATED -> 201, ou seja, o recurso foi criado
     }
@@ -46,8 +47,6 @@ public class ConsultorController {
         // Erro 404 o usuário nao foi encontrado
         // ok -> 200 deu tudo certo
         return consultor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-
-
     }
 
     @PutMapping("/editar/{id}")
