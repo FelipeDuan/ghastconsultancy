@@ -1,8 +1,8 @@
 package com.ghastconsultancy.ghastconsultancy.controller;
 
+import com.ghastconsultancy.ghastconsultancy.enums.StatusEtapa;
 import com.ghastconsultancy.ghastconsultancy.model.Etapa;
 import com.ghastconsultancy.ghastconsultancy.repository.EtapaRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,63 +11,61 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping(("/etapa"))
+@RequestMapping(("/etapas"))
 public class EtapaController {
 
-    private EtapaRepository etapaRepository;
+    private final EtapaRepository etapaRepository;
 
-    @GetMapping("/consultar/todos")
-    public List<Etapa> cosultarTodos(){
-        return etapaRepository.findAll();
+    public EtapaController(EtapaRepository etapaRepository) {
+        this.etapaRepository = etapaRepository;
     }
 
-    @GetMapping("/consultar/{id}")
+    @GetMapping
+    public ResponseEntity<List<Etapa>> cosultarTodos(){
+        List<Etapa> etapas = etapaRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(etapas);
+    }
+
+    @GetMapping("/{id}")
     public ResponseEntity<Etapa> consultar(@PathVariable Long id){
         Optional<Etapa> etapa = etapaRepository.findById(id);
-        if(etapa.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(etapa.get());
+        return etapa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/consultar/status/{status}")
-    public ResponseEntity<List<Etapa>> consultarStatus(@PathVariable Integer status){
-        List<Etapa> etapas = etapaRepository.findAll();
+    @GetMapping("/status/{statusEtapa}")
+    public ResponseEntity<List<Etapa>> consultarStatus(@PathVariable StatusEtapa statusEtapa){
+        List<Etapa> etapas = etapaRepository.findByStatusEtapa(statusEtapa);
         return ResponseEntity.ok(etapas);
     }
 
 
-    @PutMapping("/editar/{id}")
-    public ResponseEntity<String> editarEtapa(@PathVariable Long id, @RequestBody Etapa etapaParam){
-        Optional<Etapa> etapa = etapaRepository.findById(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Etapa> editarEtapa(@PathVariable Long id, @RequestBody Etapa etapaParam){
+        Optional<Etapa> etapaOptional = etapaRepository.findById(id);
 
-        if(etapa.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("A etapa especificada não foi encontrada");
+        if(etapaOptional.isPresent()){
+            Etapa etapa = etapaOptional.get();
+
+            etapa.setNome(etapaParam.getNome());
+            etapa.setDescricao(etapaParam.getDescricao());
+            etapa.setStatusEtapa(etapaParam.getStatusEtapa());
+            etapaRepository.save(etapa);
+
+            return ResponseEntity.status(HttpStatus.OK).body(etapa);
         }
-        else{
-            etapa.get().setNome(etapaParam.getNome());
-            etapa.get().setDescricao(etapaParam.getDescricao());
-            etapa.get().setStatus(etapaParam.getStatus());
-            etapaRepository.save(etapa.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Etapa atualizada com sucesso!");
-        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
     }
 
-
-    @DeleteMapping("/deleter/{id}")
-    public ResponseEntity<String> deleterEtapa(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Etapa> deleterEtapa(@PathVariable Long id){
         Optional<Etapa> etapa =etapaRepository.findById(id);
         if(etapa.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("A etapa especificada não foi encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         else{
             etapaRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Etapa deletada!");
+            return ResponseEntity.status(HttpStatus.OK).body(etapa.get());
         }
     }
-
-
-
-
 }

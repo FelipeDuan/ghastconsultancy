@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ConsultorRepository extends JpaRepository<Consultor, Long> {
-
     List<Consultor> findByEspecializacao(Integer especializacao);
     Optional<Consultor> findByCpf(String cpf);
 }

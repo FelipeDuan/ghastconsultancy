@@ -1,7 +1,8 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
 
-import com.ghastconsultancy.ghastconsultancy.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ghastconsultancy.ghastconsultancy.enums.StatusEtapa;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,8 +10,8 @@ import lombok.*;
 @Setter
 @Getter
 @Entity
-@Table(name="etapa")
 @NoArgsConstructor
+@Table(name="etapas")
 public class Etapa {
 
 
@@ -24,25 +25,20 @@ public class Etapa {
 
     @Column(name="descricao",length = 100)
     private String descricao;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name= "status",nullable = false)
+    private StatusEtapa statusEtapa = StatusEtapa.EM_ANDAMENTO;
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @Column(name= "status",length = 20,nullable = false)
-    private Integer status;
+    @JsonIgnore
+    @JoinColumn(name= "projeto",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Projeto projeto;
 
-    public Etapa(String nome,String descricao,Status status) {
+    public Etapa(String nome, String descricao, Projeto projeto) {
         this.nome = nome;
         this.descricao = descricao;
-        setStatus(status);
+        this.projeto = projeto;
     }
 
-    public Status getStatus(){
-        return Status.valueOf(status);
-    }
-
-    public void setStatus(Status status){
-        if(status != null){
-            this.status = status.getCode();
-        }
-    }
 }
