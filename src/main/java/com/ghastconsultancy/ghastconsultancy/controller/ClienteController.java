@@ -3,6 +3,8 @@ package com.ghastconsultancy.ghastconsultancy.controller;
 import com.ghastconsultancy.ghastconsultancy.enums.TipoCliente;
 import com.ghastconsultancy.ghastconsultancy.model.Cliente;
 import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
+import com.ghastconsultancy.ghastconsultancy.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ClienteController {
+    @Autowired
+    private ClienteService clienteService;
 
     private ClienteRepository clienteRepository;
 
@@ -33,20 +38,8 @@ public class ClienteController {
     // Method de atualização de cliente
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Optional<Cliente> clienteExistente = clienteRepository.findById(id);
-
-        if (clienteExistente.isPresent()) {
-            Cliente clienteAtualizado = clienteExistente.get();
-            clienteAtualizado.setNome(cliente.getNome());
-            clienteAtualizado.setCpf(cliente.getCpf());
-            clienteAtualizado.setEmail(cliente.getEmail());
-            clienteAtualizado.setTelefone(cliente.getTelefone());
-            clienteRepository.save(clienteAtualizado);
-            return ResponseEntity.ok(clienteAtualizado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+        return ResponseEntity.ok(clienteService.atualizar(id, cliente));
+    } // de 13 pra 1 para ir dormir feliz, By: M & A.
 
     // Method de exclusão de cliente
     @DeleteMapping("/{id}")
