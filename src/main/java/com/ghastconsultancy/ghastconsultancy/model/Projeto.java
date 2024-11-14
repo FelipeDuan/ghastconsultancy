@@ -22,7 +22,7 @@ public class Projeto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id",nullable = false)
     private Long id;
 
     @Column(name = "nome", length = 20, nullable = false)
@@ -35,6 +35,10 @@ public class Projeto {
     @Column(name = "status", length = 10, nullable = false)
     private StatusProjeto statusProjeto = StatusProjeto.EM_ESPERA;
 
+    @JoinColumn(name="relatorio",nullable = false)
+    private Relatorio relatorio;
+
+
     @Setter(AccessLevel.NONE)
     @Column (name = "etapas")
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true) //
@@ -42,9 +46,10 @@ public class Projeto {
     private List<Etapa> etapas = new ArrayList<>();
 
 
-    public Projeto(String nome, String descricao) {
+    public Projeto(String nome, String descricao,Relatorio relatorio) {
         this.nome = nome;
         this.descricao = descricao;
+        this.relatorio = relatorio;
     }
 
     public void addEtapas(Etapa etapa) {
