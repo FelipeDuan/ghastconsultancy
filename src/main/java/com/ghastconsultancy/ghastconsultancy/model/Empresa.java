@@ -26,8 +26,24 @@ public class Empresa {
     @Column(name = "email", length = 50, nullable = false)
     private String email;
 
-    @Column(name = "telefone", length = 15)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "setor_atuacao", length = 15)
     private SetorAtuacao setorAtuacao;
 
+    @Column(name = "telefone", length = 15)
+    private String telefone;
+
+    @ManyToOne
+    @JoinColumn(name = "representante_legal_id", nullable = false)
+    private Cliente representanteLegal;
+
+    // Construtor
+    public Empresa(String nome, String cnpj, String email, SetorAtuacao setorAtuacao, Cliente representanteLegal) {
+        this.nome = nome;
+        this.cnpj = cnpj;
+        this.email = email;
+        this.setorAtuacao = setorAtuacao;
+        this.representanteLegal = representanteLegal;
+    }
 
 }

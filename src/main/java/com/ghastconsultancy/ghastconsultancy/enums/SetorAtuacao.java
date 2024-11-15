@@ -5,7 +5,6 @@ public enum SetorAtuacao {
     SAUDE,
     EDUCACAO,
     FINANCEIRO,
-    COMERCIO,
     INDUSTRIA,
     SERVICOS,
     GESTAO
