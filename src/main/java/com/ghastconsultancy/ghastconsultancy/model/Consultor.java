@@ -18,7 +18,7 @@ public class Consultor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id",nullable = false)
     private Long id;
 
     @Column(name = "nome",length = 50, nullable = false)
