@@ -1,17 +1,11 @@
 package com.ghastconsultancy.ghastconsultancy.config;
 
-import com.ghastconsultancy.ghastconsultancy.enums.Especializacao;
-import com.ghastconsultancy.ghastconsultancy.enums.TipoDeAtendimento;
-import com.ghastconsultancy.ghastconsultancy.model.Cliente;
-import com.ghastconsultancy.ghastconsultancy.model.Consultor;
 import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
 import com.ghastconsultancy.ghastconsultancy.repository.ConsultorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
-import java.util.Arrays;
 
 @Configuration
 @Profile("teste")
