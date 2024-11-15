@@ -21,7 +21,7 @@ public enum Especializacao {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Código para o tipo de atendimento inválido");
+        throw new IllegalArgumentException("Código para a especialização inválido");
     }
 
 

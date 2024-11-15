@@ -41,6 +41,15 @@ public class Cliente {
         this.tipoCliente = TipoCliente.PADRAO; // Define o tipo padrão ao criar o cliente
     }
 
+    // Method para atualizar o cliente
+    public Cliente atualizar(Cliente cliente){
+        this.nome  = cliente.getNome();
+        this.cpf = cliente.getCpf();
+        this.email = cliente.getEmail();
+        this.telefone = cliente.getTelefone();
+        return this;
+    }
+
     // Method para atualizar o tipo de cliente para VIP
     public void promoverParaVip() {
         this.tipoCliente = TipoCliente.VIP;
