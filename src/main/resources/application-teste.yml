@@ -1,13 +1,9 @@
 spring:
-  profiles:
-    active: teste
   application:
     name: Ghast Consultory
 
-  # Settando a base com o banco
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-
+    url: jdbc:postgresql://localhost:5432/teste # Nome do banco de dados ajustado
     username: postgres
     password: developer
     driver-class-name: org.postgresql.Driver
@@ -20,4 +16,5 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
 
