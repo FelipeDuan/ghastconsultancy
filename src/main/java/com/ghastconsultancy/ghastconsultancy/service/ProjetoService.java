@@ -5,8 +5,7 @@ import com.ghastconsultancy.ghastconsultancy.model.Projeto;
 import com.ghastconsultancy.ghastconsultancy.repository.ProjetoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Service
@@ -44,6 +43,7 @@ public class ProjetoService {
         Projeto projeto = findProjetoById(id);
         projeto.setNome(projetoUpdate.getNome());
         projeto.setDescricao(projetoUpdate.getDescricao());
+
         projetoRepository.save(projeto);
     }
 

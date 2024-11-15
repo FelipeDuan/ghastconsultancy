@@ -79,6 +79,7 @@ public class ProjetoController {
         }
     }
 
+
     // DELETE -> ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Projeto> DeletarProjeto(@PathVariable Long id){
