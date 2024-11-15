@@ -49,7 +49,6 @@ public class Projeto {
     private Relatorio relatorio;
 
     @Setter(AccessLevel.NONE)
-    @Column (name = "etapas")
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true) //
     // garante que não haverá etapas sem projetos
     private List<Etapa> etapas = new ArrayList<>();

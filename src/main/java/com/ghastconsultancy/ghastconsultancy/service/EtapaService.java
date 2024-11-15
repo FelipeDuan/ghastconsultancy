@@ -49,7 +49,6 @@ public class EtapaService {
 
     public void deleteEtapa(Long id) {
         etapaRepository.deleteById(id);
-
     }
 
 }
