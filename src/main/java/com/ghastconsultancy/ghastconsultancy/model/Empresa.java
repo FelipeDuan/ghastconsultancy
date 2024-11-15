@@ -30,9 +30,6 @@ public class Empresa {
     @Column(name = "setor_atuacao", length = 15)
     private SetorAtuacao setorAtuacao;
 
-    @Column(name = "telefone", length = 15)
-    private String telefone;
-
     @ManyToOne
     @JoinColumn(name = "representante_legal_id", nullable = false)
     private Cliente representanteLegal;
@@ -46,4 +43,8 @@ public class Empresa {
         this.representanteLegal = representanteLegal;
     }
 
+    // Method para obter o telefone do representante legal
+    public String getTelefone() {
+        return representanteLegal != null ? representanteLegal.getTelefone() : null;
+    }
 }
