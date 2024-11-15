@@ -45,9 +45,6 @@ public class Projeto {
     @Column(name = "status", length = 10, nullable = false)
     private StatusProjeto statusProjeto = StatusProjeto.EM_ESPERA;
 
-    @OneToOne(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Relatorio relatorio;
-
     @Setter(AccessLevel.NONE)
     @Column (name = "etapas")
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true) //
