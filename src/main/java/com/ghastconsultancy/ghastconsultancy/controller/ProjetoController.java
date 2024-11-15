@@ -1,108 +1,95 @@
 package com.ghastconsultancy.ghastconsultancy.controller;
 
 import com.ghastconsultancy.ghastconsultancy.enums.StatusProjeto;
-import com.ghastconsultancy.ghastconsultancy.model.Etapa;
 import com.ghastconsultancy.ghastconsultancy.model.Projeto;
-import com.ghastconsultancy.ghastconsultancy.repository.ProjetoRepository;
+import com.ghastconsultancy.ghastconsultancy.service.ProjetoService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 
 @RestController
 @RequestMapping("/projetos")
 public class ProjetoController {
 
-    private final ProjetoRepository projetoRepository;
+    private final ProjetoService projetoService;
 
-    public ProjetoController(ProjetoRepository projetoRepository) {
-        this.projetoRepository = projetoRepository;
+    public ProjetoController(ProjetoService projetoService) {
+        this.projetoService = projetoService;
     }
 
+
+    // POST
     @PostMapping
-    public ResponseEntity<Projeto> CriarProjeto(@RequestBody Projeto projeto){
-        projetoRepository.save(projeto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(projeto);
+    public ResponseEntity<Projeto> CriarProjeto(@RequestBody Projeto projetoRequest){
+        Projeto projeto = projetoService.saveProjeto(projetoRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(projeto);
     }
 
+    // GET -> ALL
     @GetMapping
     public ResponseEntity<List<Projeto>> ListarProjetos(){
-        return ResponseEntity.status(HttpStatus.OK).body(projetoRepository.findAll());
-    }
+        List<Projeto> projetos = projetoService.findAll();
 
+        return projetos.isEmpty() ?
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build() :
+                ResponseEntity.status(HttpStatus.OK).body(projetos);
+    }
+    // GET -> ID
     @GetMapping("/{id}")
     public ResponseEntity<Projeto> ListarProjetoPorId(@PathVariable Long id){
-        Optional<Projeto> projeto = projetoRepository.findById(id);
-        return  projeto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(projetoService.findProjetoById(id));
+        }
+        catch (RuntimeException exception){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
-
-    @GetMapping("/status/{statusProjeto}")
+    // GET -> StatusProjeto
+    @GetMapping("/filtrar/{statusProjeto}")
     public ResponseEntity<List<Projeto>> ListarProjetoPorStatus(@PathVariable StatusProjeto statusProjeto){
-        List<Projeto> projetos = projetoRepository.findByStatusProjeto(statusProjeto);
-        return ResponseEntity.status(HttpStatus.OK).body(projetos);
+        List<Projeto> projetos = projetoService.findProjetoByStatus(statusProjeto);
+        return projetos.isEmpty() ?
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build() :
+                ResponseEntity.status(HttpStatus.OK).body(projetos);
     }
 
+    // GET -> MES ANO DA DATA DE INICIO
+    @GetMapping("/filtrar/{ano}/{mes}")
+    public ResponseEntity<List<Projeto>> buscarProjetosPorMesEAno(@PathVariable int ano, @PathVariable int mes) {
+        List<Projeto> projetos = projetoService.findProjetosPorMesEAno(ano, mes);
+        return projetos.isEmpty() ?
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build() :
+                ResponseEntity.status(HttpStatus.OK).body(projetos);
+    }
+
+    // PUT -> ID
     @PutMapping("/{id}")
-    public ResponseEntity<Projeto> AtualizarProjeto(@PathVariable Long id,@RequestBody Projeto projetoParam){
-        Optional<Projeto> projeto = projetoRepository.findById(id);
-        if(projeto.isPresent()){
-            projeto.get().setNome(projetoParam.getNome());
-            projeto.get().setDescricao(projetoParam.getDescricao());
-            projetoRepository.save(projeto.get());
-            return ResponseEntity.status(HttpStatus.OK).body(projeto.get());
+    public ResponseEntity<Projeto> AtualizarProjeto(@PathVariable Long id,@RequestBody Projeto projetoUpdate){
+        try {
+            projetoService.updateProjeto(id, projetoUpdate);
+            return ResponseEntity.status(HttpStatus.OK).body(projetoService.findProjetoById(id));
         }
-        else{
+        catch (RuntimeException exception){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    @PutMapping("/{id}/etapas")
-    public ResponseEntity<Projeto> AdicionarEtapa(@PathVariable Long id, @RequestBody Etapa etapa){
-
-        Optional<Projeto> projeto = projetoRepository.findById(id);
-        if(projeto.isPresent()){
-            projeto.get().addEtapas(etapa);
-            etapa.setProjeto(projeto.get());
-            projetoRepository.save(projeto.get());
-            return ResponseEntity.status(HttpStatus.OK).body(projeto.get());
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    @PutMapping("/{id}/etapas/{etapasId}")
-    public ResponseEntity<Projeto> DeletarEtapa(@PathVariable Long id,@PathVariable Long etapasId){
-        Optional<Projeto> projetoOptional = projetoRepository.findById(id);
-        if(projetoOptional.isPresent()){
-
-            Projeto projeto = projetoOptional.get();
-
-            for (Etapa etapa : projeto.getEtapas()){
-                if(etapa.getId().equals(etapasId)){
-                    projeto.removerEtapas(etapa);
-                    projetoRepository.save(projeto);
-                    return ResponseEntity.status(HttpStatus.OK).body(projeto);
-                }
-            }
-            // se não encontrar Nenhuma etapa com esse id
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        //se não encontrar nenhum Projeto com esse id
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    }
-
+    // DELETE -> ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Projeto> DeletarProjeto(@PathVariable Long id){
-        Optional<Projeto> projeto = projetoRepository.findById(id);
-        if(projeto.isPresent()){
-            projetoRepository.delete(projeto.get());
-            return ResponseEntity.status(HttpStatus.OK).body(projeto.get());
+        try{
+            projetoService.removeProjeto(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        catch (RuntimeException exception){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+
     }
 }

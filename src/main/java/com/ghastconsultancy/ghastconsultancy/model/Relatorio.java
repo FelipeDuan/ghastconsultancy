@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Setter
@@ -22,6 +23,13 @@ public class Relatorio {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name ="descicao", nullable = false)
+    private String descricao;
+
+    @Column(name= "insight", length = 100)
+    private String insight;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(name= "dataInicio",length = 10, nullable = false)
     private LocalDate dataInicio;
 
@@ -29,14 +37,11 @@ public class Relatorio {
     @Column(name="dataFim",length = 10, nullable = false)
     private LocalDate dataFim;
 
-    @Column(name ="descicao", nullable = false)
-    private String descricao;
-
-    @OneToOne(mappedBy = "relatorio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name="projeto",nullable = false)
     private Projeto projeto;
 
-    public Relatorio(Long id, LocalDate dataFim, LocalDate dataInicio, Projeto projeto) {
-        this.id = id;
+    public Relatorio(LocalDate dataFim, LocalDate dataInicio, Projeto projeto) {
         this.dataFim = dataFim;
         this.dataInicio = dataInicio;
         this.projeto = projeto;

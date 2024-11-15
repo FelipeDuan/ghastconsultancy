@@ -2,6 +2,7 @@ package com.ghastconsultancy.ghastconsultancy.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ghastconsultancy.ghastconsultancy.enums.StatusProjeto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +33,20 @@ public class Projeto {
     @Column(name = "descricao", length = 100, nullable = false)
     private String descricao;
 
+    @Column(name= "dataInicio",length = 10, nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataInicio;
+
+    @Column(name= "dataFim",length = 10, nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataFim;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 10, nullable = false)
     private StatusProjeto statusProjeto = StatusProjeto.EM_ESPERA;
 
-    @JoinColumn(name="relatorio",nullable = false)
+    @OneToOne(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Relatorio relatorio;
-
 
     @Setter(AccessLevel.NONE)
     @Column (name = "etapas")
@@ -46,10 +55,11 @@ public class Projeto {
     private List<Etapa> etapas = new ArrayList<>();
 
 
-    public Projeto(String nome, String descricao,Relatorio relatorio) {
+    public Projeto(String nome, String descricao, LocalDate dataInicio, LocalDate dataFim) {
         this.nome = nome;
         this.descricao = descricao;
-        this.relatorio = relatorio;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
     }
 
     public void addEtapas(Etapa etapa) {
@@ -67,4 +77,5 @@ public class Projeto {
             }
         }
     }
+
 }
