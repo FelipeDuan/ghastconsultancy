@@ -2,14 +2,13 @@ package com.ghastconsultancy.ghastconsultancy.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
-
 
 @Setter
 @Getter
@@ -27,7 +26,7 @@ public class Relatorio {
     private String descricao;
 
     @Column(name= "insight", length = 100)
-    private String insight;
+    private String insightVip;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(name= "dataInicio",length = 10, nullable = false)
@@ -37,13 +36,17 @@ public class Relatorio {
     @Column(name="dataFim",length = 10, nullable = false)
     private LocalDate dataFim;
 
-    @OneToOne
+    
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name="projeto",nullable = false)
     private Projeto projeto;
 
-    public Relatorio(LocalDate dataFim, LocalDate dataInicio, Projeto projeto) {
-        this.dataFim = dataFim;
-        this.dataInicio = dataInicio;
+    public Relatorio(Projeto projeto) {
         this.projeto = projeto;
+        setDataInicio(projeto.getDataInicio());
+        setDataFim(projeto.getDataFim());
     }
+
+
 }

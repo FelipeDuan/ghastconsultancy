@@ -24,8 +24,7 @@ public class EtapaService {
         Projeto projeto = projetoService.findProjetoById(projetoId);
         etapa.setProjeto(projeto);
         projeto.addEtapas(etapa);
-        projetoService.saveProjeto(projeto);
-        return etapa;
+        return etapaRepository.save(etapa);
     }
 
     public List<Etapa> findAllEtapas() {
@@ -39,14 +38,17 @@ public class EtapaService {
     }
 
     // PUT -> ID
-    public void updateEtapa(Long id, Etapa etapaUpdate) {
+    public Etapa updateEtapa(Long id, Etapa etapaUpdate) {
         Etapa etapa = findEtapaById(id);
         etapa.setNome(etapaUpdate.getNome());
         etapa.setDescricao(etapaUpdate.getDescricao());
         etapa.setStatusEtapa(etapaUpdate.getStatusEtapa());
        etapaRepository.save(etapa);
+       return etapa;
     }
 
+
+    // DELEETE  -> ID
     public void deleteEtapa(Long id) {
         etapaRepository.deleteById(id);
     }

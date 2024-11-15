@@ -45,8 +45,10 @@ public class Projeto {
     @Column(name = "status", length = 10, nullable = false)
     private StatusProjeto statusProjeto = StatusProjeto.EM_ESPERA;
 
-    @OneToOne(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Relatorio relatorio;
+
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "projeto",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Relatorio> relatorios;
 
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, orphanRemoval = true) //
@@ -68,13 +70,9 @@ public class Projeto {
         }
     }
 
-    public void removerEtapas(Etapa etapa) {
-        if (!etapas.isEmpty()) {
-            etapas.remove(etapa);
-            if (etapas.isEmpty()) {
-                this.statusProjeto = StatusProjeto.EM_ESPERA;
-            }
-        }
+    public void addRelatorio(Relatorio relatorio) {
+        relatorios.add(relatorio);
     }
+
 
 }
