@@ -23,6 +23,7 @@ public class EmpresaService {
 
     public Empresa criarEmpresa(Empresa empresa) {
         validarRepresentanteLegal(empresa.getRepresentanteLegal().getId());
+
         return empresaRepository.save(empresa);
     }
 

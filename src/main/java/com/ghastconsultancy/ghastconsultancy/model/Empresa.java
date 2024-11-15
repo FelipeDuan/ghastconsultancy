@@ -34,17 +34,17 @@ public class Empresa {
     @JoinColumn(name = "representante_legal_id", nullable = false)
     private Cliente representanteLegal;
 
+    @Column(name = "telefone", length = 15)
+    private String telefone;
+
     // Construtor
-    public Empresa(String nome, String cnpj, String email, SetorAtuacao setorAtuacao, Cliente representanteLegal) {
+    public Empresa(String nome, String cnpj, String email, String telefone , SetorAtuacao setorAtuacao, Cliente representanteLegal) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.email = email;
+        this.telefone = telefone;
         this.setorAtuacao = setorAtuacao;
         this.representanteLegal = representanteLegal;
     }
 
-    // Method para obter o telefone do representante legal
-    public String getTelefone() {
-        return representanteLegal != null ? representanteLegal.getTelefone() : null;
-    }
 }
