@@ -1,0 +1,11 @@
+[build]
+builder = "maven"
+base_image = "railway/java:21" # Garantir que a imagem suporta Java 21
+build_command = "mvn clean package -DskipTests"
+start_command = "java -jar target/ghastconsultancy-0.0.1-SNAPSHOT.jar"
+
+[env]
+SPRING_DATASOURCE_URL = "jdbc:postgresql://localhost:5432/teste"
+SPRING_DATASOURCE_USERNAME = "postgres"
+SPRING_DATASOURCE_PASSWORD = "developer"
+PORT = "8080"
