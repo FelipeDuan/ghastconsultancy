@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 
@@ -47,10 +48,10 @@ public class EtapaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Etapa> editarEtapa(@PathVariable Long id, @RequestBody Etapa etapaParam){
+    public ResponseEntity<Etapa> editarEtapa(@PathVariable Long id, @RequestBody Etapa etapaUpdate){
         try {
-            etapaService.updateEtapa(id, etapaParam);
-            return ResponseEntity.status(HttpStatus.OK).body(etapaService.findEtapaById(id));
+
+            return ResponseEntity.status(HttpStatus.OK).body(etapaService.updateEtapa(id, etapaUpdate));
         }
         catch (RuntimeException exception){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
