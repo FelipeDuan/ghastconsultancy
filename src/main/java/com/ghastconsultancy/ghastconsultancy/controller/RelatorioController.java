@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/relatorios")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RelatorioController {
 
     private final RelatorioService relatorioService;
