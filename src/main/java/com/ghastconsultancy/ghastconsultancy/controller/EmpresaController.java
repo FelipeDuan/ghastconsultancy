@@ -1,101 +1,77 @@
 package com.ghastconsultancy.ghastconsultancy.controller;
 
 import com.ghastconsultancy.ghastconsultancy.enums.SetorAtuacao;
-import com.ghastconsultancy.ghastconsultancy.model.Cliente;
 import com.ghastconsultancy.ghastconsultancy.model.Empresa;
-import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
-import com.ghastconsultancy.ghastconsultancy.repository.EmpresaRepository;
+import com.ghastconsultancy.ghastconsultancy.service.EmpresaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/empresas")
 public class EmpresaController {
 
-    private final ClienteRepository clienteRepository;
-    private final EmpresaRepository empresaRepository;
+    private final EmpresaService empresaService;
 
-    public EmpresaController(EmpresaRepository empresaRepository, ClienteRepository clienteRepository) {
-        this.empresaRepository = empresaRepository;
-        this.clienteRepository = clienteRepository;
+    public EmpresaController(EmpresaService empresaService) {
+        this.empresaService = empresaService;
     }
 
-    // Method de Cadastro de Empresa
     @PostMapping
     public ResponseEntity<?> criarEmpresa(@RequestBody Empresa empresa) {
-        if (!clienteRepository.existsById(empresa.getRepresentanteLegal().getId())) {
-            return ResponseEntity.badRequest().body("Representante legal não encontrado.");
+        try {
+            Empresa novaEmpresa = empresaService.criarEmpresa(empresa);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar empresa: " + e.getMessage());
         }
-
-        // Obter o telefone do representante legal
-        String telefoneRepresentante = clienteRepository.findById(empresa.getRepresentanteLegal().getId())
-                .map(Cliente::getTelefone)
-                .orElse(null);
-
-        // Definir o telefone da empresa com o telefone do representante
-        empresa.setTelefone(telefoneRepresentante);
-
-        Empresa novaEmpresa = empresaRepository.save(empresa);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa);
     }
 
-    // Method de Listar todas as Empresas
     @GetMapping
     public ResponseEntity<List<Empresa>> listarEmpresas() {
-        List<Empresa> empresas = empresaRepository.findAll();
+        List<Empresa> empresas = empresaService.listarEmpresas();
         return ResponseEntity.ok(empresas);
     }
 
-    // Method de Listar Empresas por Setor de Atuação
     @GetMapping("/setor/{setor}")
     public ResponseEntity<List<Empresa>> listarEmpresasPorSetor(@PathVariable SetorAtuacao setor) {
-        List<Empresa> empresas = empresaRepository.findBySetorAtuacao(setor);
+        List<Empresa> empresas = empresaService.listarEmpresasPorSetor(setor);
         return ResponseEntity.ok(empresas);
     }
 
-    // Method de Buscar Empresa por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Empresa> buscarEmpresaPorId(@PathVariable Long id) {
-        Optional<Empresa> empresa = empresaRepository.findById(id);
-        return empresa.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<?> buscarEmpresaPorId(@PathVariable Long id) {
+        try {
+            Empresa empresa = empresaService.buscarEmpresaPorId(id);
+            return ResponseEntity.ok(empresa);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
+        }
     }
 
-    // Method de Atualização de Empresa
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaAtualizada) {
-        if (!empresaRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada.");
+        try {
+            Empresa empresaSalva = empresaService.atualizarEmpresa(id, empresaAtualizada);
+            return ResponseEntity.ok(empresaSalva);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("não encontrada")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar empresa: " + e.getMessage());
+            }
         }
-
-        if (!clienteRepository.existsById(empresaAtualizada.getRepresentanteLegal().getId())) {
-            return ResponseEntity.badRequest().body("Representante legal não encontrado.");
-        }
-
-        // Obter o telefone do representante legal
-        String telefoneRepresentante = clienteRepository.findById(empresaAtualizada.getRepresentanteLegal().getId())
-                .map(Cliente::getTelefone)
-                .orElse(null);
-
-        // Definir o telefone da empresa com o telefone do representante
-        empresaAtualizada.setTelefone(telefoneRepresentante);
-
-        empresaAtualizada.setId(id); // Garante que o ID permanece o mesmo para atualizar
-        Empresa empresaSalva = empresaRepository.save(empresaAtualizada);
-        return ResponseEntity.ok(empresaSalva);
     }
 
-    // Method Exclusão de Empresa
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirEmpresa(@PathVariable Long id) {
-        if (!empresaRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> excluirEmpresa(@PathVariable Long id) {
+        try {
+            empresaService.excluirEmpresa(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Empresa excluída com sucesso.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro: " + e.getMessage());
         }
-
-        empresaRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }
