@@ -1,11 +1,14 @@
 package com.ghastconsultancy.ghastconsultancy.config;
 
 import com.ghastconsultancy.ghastconsultancy.enums.Especializacao;
+import com.ghastconsultancy.ghastconsultancy.enums.SetorAtuacao;
 import com.ghastconsultancy.ghastconsultancy.enums.TamanhoNegocio;
 import com.ghastconsultancy.ghastconsultancy.model.Cliente;
 import com.ghastconsultancy.ghastconsultancy.model.Consultor;
+import com.ghastconsultancy.ghastconsultancy.model.Empresa;
 import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
 import com.ghastconsultancy.ghastconsultancy.repository.ConsultorRepository;
+import com.ghastconsultancy.ghastconsultancy.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +24,12 @@ public class TestConfig implements CommandLineRunner {
 
     private final ClienteRepository clienteRepository;
     private final ConsultorRepository consultorRepository;
+    private final EmpresaRepository empresaRepository;
 
-    public TestConfig(ClienteRepository clienteRepository, ConsultorRepository consultorRepository) {
+    public TestConfig(ClienteRepository clienteRepository, ConsultorRepository consultorRepository, EmpresaRepository empresaRepository) {
         this.clienteRepository = clienteRepository;
         this.consultorRepository = consultorRepository;
+        this.empresaRepository = empresaRepository;
     }
 
     @Override
@@ -86,6 +91,23 @@ public class TestConfig implements CommandLineRunner {
 //                c8, c9, c10, c11, c12, c13, c14,
 //                c15, c16, c17, c18, c19, c20, c21
 //        ));
+
+//        // Usando clientes já criados como representantes legais
+//        Cliente representante1 = clienteRepository.findById(1L).orElseThrow(() -> new RuntimeException("Representante não encontrado"));
+//        Cliente representante2 = clienteRepository.findById(2L).orElseThrow(() -> new RuntimeException("Representante não encontrado"));
+//        Cliente representante3 = clienteRepository.findById(3L).orElseThrow(() -> new RuntimeException("Representante não encontrado"));
+//        Cliente representante4 = clienteRepository.findById(4L).orElseThrow(() -> new RuntimeException("Representante não encontrado"));
+//        Cliente representante5 = clienteRepository.findById(5L).orElseThrow(() -> new RuntimeException("Representante não encontrado"));
+//
+//        // Criando empresas
+//        Empresa e1 = new Empresa("Nintendo", "12345678000101", "contato@nintendo.com", "1145678901", SetorAtuacao.TECNOLOGIA, representante1);
+//        Empresa e2 = new Empresa("Sony Pictures", "23456789000102", "contato@sonypictures.com", "1145678902", SetorAtuacao.INDUSTRIA, representante2);
+//        Empresa e3 = new Empresa("Rockstar Games", "34567890000103", "contato@rockstargames.com", "1145678903", SetorAtuacao.TECNOLOGIA, representante3);
+//        Empresa e4 = new Empresa("Warner Bros", "45678900000104", "contato@warnerbros.com", "1145678904", SetorAtuacao.INDUSTRIA, representante4);
+//        Empresa e5 = new Empresa("Ubisoft", "56789000000105", "contato@ubisoft.com", "1145678905", SetorAtuacao.TECNOLOGIA, representante5);
+//
+//        // Salvando empresas no banco
+//        empresaRepository.saveAll(Arrays.asList(e1, e2, e3, e4, e5));
 
     }
 }
