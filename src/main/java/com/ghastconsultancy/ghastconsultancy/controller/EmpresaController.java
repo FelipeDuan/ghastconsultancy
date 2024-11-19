@@ -52,6 +52,12 @@ public class EmpresaController {
         }
     }
 
+    @GetMapping("/representante/{representanteId}")
+    public ResponseEntity<List<Empresa>> buscarPorRepresentanteLegal(@PathVariable Long representanteId) {
+        List<Empresa> empresas = empresaService.buscarPorRepresentanteLegal(representanteId);
+        return ResponseEntity.ok(empresas);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarEmpresa(@PathVariable Long id, @RequestBody Empresa empresaAtualizada) {
         try {

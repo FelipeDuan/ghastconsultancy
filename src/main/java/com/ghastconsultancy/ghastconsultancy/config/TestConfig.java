@@ -3,18 +3,24 @@ package com.ghastconsultancy.ghastconsultancy.config;
 import com.ghastconsultancy.ghastconsultancy.enums.Especializacao;
 import com.ghastconsultancy.ghastconsultancy.enums.SetorAtuacao;
 import com.ghastconsultancy.ghastconsultancy.enums.TamanhoNegocio;
+import com.ghastconsultancy.ghastconsultancy.enums.TipoCliente;
 import com.ghastconsultancy.ghastconsultancy.model.Cliente;
 import com.ghastconsultancy.ghastconsultancy.model.Consultor;
+import com.ghastconsultancy.ghastconsultancy.model.Contrato;
 import com.ghastconsultancy.ghastconsultancy.model.Empresa;
 import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
 import com.ghastconsultancy.ghastconsultancy.repository.ConsultorRepository;
+import com.ghastconsultancy.ghastconsultancy.repository.ContratoRepository;
 import com.ghastconsultancy.ghastconsultancy.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @Profile("teste")
@@ -25,11 +31,13 @@ public class TestConfig implements CommandLineRunner {
     private final ClienteRepository clienteRepository;
     private final ConsultorRepository consultorRepository;
     private final EmpresaRepository empresaRepository;
+    private final ContratoRepository contratoRepository;
 
-    public TestConfig(ClienteRepository clienteRepository, ConsultorRepository consultorRepository, EmpresaRepository empresaRepository) {
+    public TestConfig(ClienteRepository clienteRepository, ConsultorRepository consultorRepository, EmpresaRepository empresaRepository, ContratoRepository contratoRepository) {
         this.clienteRepository = clienteRepository;
         this.consultorRepository = consultorRepository;
         this.empresaRepository = empresaRepository;
+        this.contratoRepository = contratoRepository;
     }
 
     @Override
@@ -109,5 +117,49 @@ public class TestConfig implements CommandLineRunner {
 //        // Salvando empresas no banco
 //        empresaRepository.saveAll(Arrays.asList(e1, e2, e3, e4, e5));
 
+//        // Recuperando entidades existentes
+//        Cliente cliente1 = clienteRepository.findById(1L).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+//        Cliente cliente3 = clienteRepository.findById(3L).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+//        Cliente cliente4 = clienteRepository.findById(4L).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+//
+//        Empresa empresa1 = empresaRepository.findById(1L).orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+//        Empresa empresa2 = empresaRepository.findById(2L).orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+//        Empresa empresa3 = empresaRepository.findById(3L).orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+//
+//        Consultor consultor1 = consultorRepository.findById(1L).orElseThrow(() -> new RuntimeException("Consultor não encontrado"));
+//        Consultor consultor2 = consultorRepository.findById(2L).orElseThrow(() -> new RuntimeException("Consultor não encontrado"));
+//        Consultor consultor3 = consultorRepository.findById(3L).orElseThrow(() -> new RuntimeException("Consultor não encontrado"));
+//
+//        // Lista para armazenar contratos
+//        List<Contrato> contratos = new ArrayList<>();
+//
+//        // Quantidades de contratos por mês
+//        int[] contratosPorMes = {2, 8, 6, 14, 5, 7, 3, 6, 9, 16, 4, 10};
+//        LocalDate dataInicio = LocalDate.of(2024, 1, 1);
+//
+//        for (int mes = 0; mes < contratosPorMes.length; mes++) {
+//            for (int i = 0; i < contratosPorMes[mes]; i++) {
+//                Cliente cliente = i % 3 == 0 ? cliente1 : (i % 3 == 1 ? cliente3 : cliente4);
+//                Empresa empresa = i % 3 == 0 ? empresa1 : (i % 3 == 1 ? empresa2 : empresa3);
+//                Consultor consultor = i % 3 == 0 ? consultor1 : (i % 3 == 1 ? consultor2 : consultor3);
+//                TipoCliente tipoCliente = (i % 2 == 0) ? TipoCliente.VIP : TipoCliente.PADRAO;
+//
+//                contratos.add(new Contrato(
+//                        null,
+//                        cliente,
+//                        empresa,
+//                        consultor,
+//                        i % 3 == 0 ? "FINANCEIRO" : (i % 3 == 1 ? "GESTAO" : "TECNOLOGIA"),
+//                        dataInicio.withMonth(mes + 1).withDayOfMonth(1),
+//                        dataInicio.withMonth(mes + 1).plusDays(29), // Ajusta data fim ao mês
+//                        tipoCliente
+//                ));
+//            }
+//        }
+//
+//        // Salvando contratos no banco
+//        contratoRepository.saveAll(contratos);
     }
+
 }
+

@@ -40,6 +40,10 @@ public class EmpresaService {
                 .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
     }
 
+    public List<Empresa> buscarPorRepresentanteLegal(Long representanteId) {
+        return empresaRepository.findByRepresentanteLegalId(representanteId);
+    }
+
     public Empresa atualizarEmpresa(Long id, Empresa empresaAtualizada) {
         if (!empresaRepository.existsById(id)) {
             throw new RuntimeException("Empresa não encontrada");
