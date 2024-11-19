@@ -1,8 +1,8 @@
 package com.ghastconsultancy.ghastconsultancy.service;
 
 import com.ghastconsultancy.ghastconsultancy.enums.SetorAtuacao;
+import com.ghastconsultancy.ghastconsultancy.model.Cliente;
 import com.ghastconsultancy.ghastconsultancy.model.Empresa;
-import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
 import com.ghastconsultancy.ghastconsultancy.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,19 @@ import java.util.List;
 public class EmpresaService {
 
     private final EmpresaRepository empresaRepository;
-    private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, ClienteRepository clienteRepository) {
+    public EmpresaService(EmpresaRepository empresaRepository, ClienteService clienteService) {
         this.empresaRepository = empresaRepository;
-        this.clienteRepository = clienteRepository;
+        this.clienteService = clienteService;
+
     }
 
     public Empresa criarEmpresa(Empresa empresa) {
-        validarRepresentanteLegal(empresa.getRepresentanteLegal().getId());
-
+        Cliente cliente = clienteService.obterPorId(empresa.getRepresentanteLegal().getId());
+        empresa.setRepresentanteLegal(cliente);
+        clienteService.addEmpresa(cliente.getId(), empresa);
         return empresaRepository.save(empresa);
     }
 
@@ -45,7 +47,7 @@ public class EmpresaService {
             throw new RuntimeException("Empresa não encontrada");
         }
 
-        validarRepresentanteLegal(empresaAtualizada.getRepresentanteLegal().getId());
+        clienteService.obterPorId(empresaAtualizada.getRepresentanteLegal().getId());
 
         empresaAtualizada.setId(id); // Garante que o ID permanece o mesmo para atualizar
         return empresaRepository.save(empresaAtualizada);
@@ -58,9 +60,4 @@ public class EmpresaService {
         empresaRepository.deleteById(id);
     }
 
-    private void validarRepresentanteLegal(Long representanteId) {
-        if (!clienteRepository.existsById(representanteId)) {
-            throw new RuntimeException("Representante legal não encontrado");
-        }
-    }
 }

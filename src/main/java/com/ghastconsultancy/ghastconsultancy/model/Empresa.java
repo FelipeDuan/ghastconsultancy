@@ -1,5 +1,6 @@
 package com.ghastconsultancy.ghastconsultancy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ghastconsultancy.ghastconsultancy.enums.SetorAtuacao;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,6 +38,11 @@ public class Empresa {
     @Column(name = "telefone", length = 15)
     private String telefone;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
     // Construtor
     public Empresa(String nome, String cnpj, String email, String telefone , SetorAtuacao setorAtuacao, Cliente representanteLegal) {
         this.nome = nome;
@@ -46,5 +52,6 @@ public class Empresa {
         this.setorAtuacao = setorAtuacao;
         this.representanteLegal = representanteLegal;
     }
+
 
 }

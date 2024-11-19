@@ -2,9 +2,12 @@ package com.ghastconsultancy.ghastconsultancy.model;
 
 import com.ghastconsultancy.ghastconsultancy.enums.TipoCliente;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +36,10 @@ public class Cliente {
     @Column(name = "tipo_cliente", nullable = false)
     private TipoCliente tipoCliente = TipoCliente.PADRAO;
 
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "cliente",fetch = FetchType.LAZY)
+    private List<Empresa> empresas;
+
     public Cliente(String nome, String cpf, String email, String telefone) {
         this.nome = nome;
         this.cpf = cpf;
@@ -54,4 +61,14 @@ public class Cliente {
     public void promoverParaVip() {
         this.tipoCliente = TipoCliente.VIP;
     }
+
+    public void addEmpresa(Empresa empresa) {
+        this.empresas.add(empresa);
+    }
+
+    public void removeEmpresa(Empresa empresa) {
+        this.empresas.remove(empresa);
+    }
+
+
 }

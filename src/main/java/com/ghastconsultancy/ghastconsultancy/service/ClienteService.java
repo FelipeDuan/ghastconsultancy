@@ -2,8 +2,9 @@ package com.ghastconsultancy.ghastconsultancy.service;
 
 import com.ghastconsultancy.ghastconsultancy.enums.TipoCliente;
 import com.ghastconsultancy.ghastconsultancy.model.Cliente;
+import com.ghastconsultancy.ghastconsultancy.model.Empresa;
 import com.ghastconsultancy.ghastconsultancy.repository.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +51,18 @@ public class ClienteService {
         cliente.promoverParaVip();
         return clienteRepository.save(cliente);
     }
+
+    public void addEmpresa(Long id, Empresa Empresa){
+        Cliente cliente = obterPorId(id);
+        cliente.addEmpresa(Empresa);
+        clienteRepository.save(cliente);
+    }
+
+    public void removeEmpresa(Long id, Empresa Empresa){
+        Cliente cliente = obterPorId(id);
+        cliente.removeEmpresa(Empresa);
+        clienteRepository.save(cliente);
+    }
+
 
 }
