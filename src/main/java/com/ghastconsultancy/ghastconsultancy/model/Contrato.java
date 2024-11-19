@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Table(name = "contratos")
 @NoArgsConstructor
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class Contrato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
